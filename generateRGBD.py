@@ -247,7 +247,8 @@ def get_depth_map():
             # I am interested in the Z component of the vector that represents the point
             v = np.array([c, r, 1], dtype=np.float32)
             n = Kinv.dot(v)
-            n = n / np.linalg.norm(n);
+            # Since blender 2.8, this only introduces error in point cloud generation.
+            #n = n / np.linalg.norm(n);
             n = n * depth
             # Dirty fix, Some reason the image is flipped on the x axis 'ImageHeight - 1 - r' to correct
             # depthMap[ImageHeight - 1 - r, c] = np.uint16(depth * DepthScale)
@@ -309,8 +310,8 @@ def save_data(depth_maps, all_translations=None, all_rotations=None, timestamps=
         depth.write(str(timestamps[i]) + ' ' + DepthPath + depthName + '\n')
         depthMap = depth_maps[i]
         # plugin broken for some reason
-        io.imsave(BasePath + DepthPath + depthName, skimage.img_as_uint(depthMap), plugin='freeimage')
-        # io.imsave(BasePath + DepthPath + depthName, skimage.img_as_uint(depthMap))
+        #io.imsave(BasePath + DepthPath + depthName, skimage.img_as_uint(depthMap), plugin='freeimage')
+        io.imsave(BasePath + DepthPath + depthName, skimage.img_as_uint(depthMap))
         num = str(timestamps[i])
         if(timestamps[i] < 1000):
             num = '0'+num
